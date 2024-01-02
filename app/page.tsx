@@ -5,8 +5,6 @@ import styled from 'styled-components';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 
 import CampaignCard from '@/components/CampaignCard';
-import CampaignFactory from '@artifacts/contracts/campaign.sol/CampaignFactory.json';
-import { ethers } from 'ethers';
 import { toast } from 'react-toastify';
 import fetchData from '../utils/fetchData';
 

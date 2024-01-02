@@ -24,6 +24,7 @@ interface DonorData {
   amount: string;
   timestamp: number;
 }
+
 interface DetailsData {
   Data: CampaignData;
   DonationData?: DonorData[]; 
@@ -34,43 +35,39 @@ const Details: React.FC = () => {
   
   const [data, setData] = useState<CampaignData | null>(null)
   const [donations, setDonations] = useState<DonorData[]>([]);
-  const [donationAmount, setDonationAmount] = useState();
-  const [amount, setAmount] = useState<number>(0);
+  const [userDonations, setUserDonations] = useState<DonorData[]>([]);
+  const [donationAmount, setDonationAmount] = useState<number>(0);
   const [description, setDescription] = useState('');
   const [change, setChange] = useState(false);
 
-  const handleDonate = () => {
-    
+  const DonateFunds = async() => {
+    try {
+      await window.ethereum.request({method: "eth_requestAccounts"});
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      
+      const contract = new ethers.Contract(address, Campaign.abi, signer);
+      // Converting donation amount to Ether
+      const donationAmountInEther = ethers.parseEther(donationAmount.toString());
+
+      const transaction = await contract.donate({value: donationAmountInEther});
+      await transaction.wait();
+      console.log(transaction)
+
+      setChange(!change);
+      setDonationAmount(0);
+
+      toast.success('Donation successful!');
+    } catch (error) {
+      toast.error(`Unable to make donation. Try again later.${error.message}`)
+    }
   };
 
   useEffect(() => {
-    const request = async () => {
-      let descriptionData;
-
-      await window.ethereum.request({method: 'eth_requestAccounts'});
-      const web3Provider = new ethers.BrowserProvider(window.ethereum);
-      const signer = await web3Provider.getSigner();
-      const Address = await signer.getAddress();
-
-      const provider = new ethers.JsonRpcProvider(
-        process.env.NEXT_PUBLIC_RPC_URL
-      )
-
-      const contract = new ethers.Contract(
-        Address,
-        Campaign.abi,
-        provider
-      )
-
-      const myDonations = contract.filters.donated(Address);
-      const myAllDonations  = await contract.queryFilter(myDonations);
-    }
-
-    
     const fetchCampaignData = async () => {
       try {
         const fetchedDetails = await fetchCampaignDetails(address);
-        console.log(fetchedDetails);
+        // console.log(fetchedDetails);
         
         if(fetchedDetails) {
           setData(fetchedDetails.Data);
@@ -78,69 +75,105 @@ const Details: React.FC = () => {
           // Fetching the description from the pinata Url
           const response = await fetch(`${fetchedDetails.Data.desc}`);
           const res = await response.text();
-          console.log(res)
+
           if(res)
             setDescription(res);
 
-          // Setting the donations
+          // Setting all the donations
           
           setDonations(fetchedDetails.DonationData)
+          
+          // Setting user specific donations
+          setUserDonations(fetchedDetails.UserDonationData);
         }
       } catch (error) {
         toast.error(`Error fetching Campaign details ${error}`);
       }
-    };
+    };  
 
     fetchCampaignData();
-  }, []);
+  }, [change]);
 
-  return (
+   return (
     <Wrapper>
       {data && (
         <DetailsWrapper>
-        <Title>{data.title}</Title>
-      
-        <ContentWrapper>
+          <Title>{data.title}</Title>
+
+          <ContentWrapper>
             <SectionWrapper>
               <ImageWrapper>
-                <Image src={data.image} layout="fill" alt="Campaign Image" />
+                <Image src={data.image} layout="fill" objectFit='contain' alt="Campaign Image" />
               </ImageWrapper>
-              <Description>{description} ~  <i></i></Description>
+              <Description>{description} ~ <i></i></Description>
             </SectionWrapper>
             <SectionWrapper>
-              
               <Text>
-                  <strong>Required Amount:</strong> {data.requiredAmount} Matic
+                <strong>Required Amount:</strong> {data.requiredAmount - data.receivedAmount} Matic
               </Text>
               <Text>
-                <strong>Received Amount:</strong>{data.receivedAmount}Matic
+                <strong>Received Amount:</strong>{data.receivedAmount} Matic
               </Text>
               <Text>
-                <strong>Onwer's address:</strong> {data.owner}
+                <strong>Owner's address:</strong> {data.owner}
               </Text>
               <DonationSection>
                 <DonationInput
                   type="number"
                   value={donationAmount}
                   placeholder='Enter amount to donate'
-                  onChange={(e) => setDonationAmount(parseInt(e.target.value))}
+                  onChange={(e) => setDonationAmount(parseFloat(e.target.value))}
                 />
-                <DonateButton onClick={handleDonate}>Donate</DonateButton>
+                <DonateButton onClick={DonateFunds}>Donate</DonateButton>
               </DonationSection>
-              <DonationHidescription>
+
+              <DonationItem>
                 <strong>Recent Donations:</strong>
-                <ul>
                   {donations.map((donation, index) => (
-                    <li key={index}>Donation #{index + 1}: {donation} Matic</li>
+                    <Donation key={index}>
+                      <DonationText>{donation.donor.slice(0, 6)}...{donation.donor.slice(39)}</DonationText>
+                      <DonationText>{donation.amount} Matic</DonationText>
+                      <DonationText>{new Date(donation.timestamp * 1000).toLocaleString()}</DonationText>
+                    </Donation>
+                  ))}
+              </DonationItem>
+
+              <DonationItem>
+                <strong>Past Donations:</strong>
+                <ul>
+                  {userDonations.map((donation, index) => (
+                    <Donation key={index}>
+                      <DonationText>{donation.donor.slice(0, 6)}...{donation.donor.slice(39)}</DonationText>
+                      <DonationText>{donation.amount} Matic</DonationText>
+                      <DonationText>{new Date(donation.timestamp * 1000).toLocaleString()}</DonationText>
+                    </Donation>
                   ))}
                 </ul>
-              </DonationHidescription>
+              </DonationItem>
             </SectionWrapper>
-        </ContentWrapper>
+          </ContentWrapper>
         </DetailsWrapper>
       )}
     </Wrapper>
   );
+};
+
+
+const Wrapper = styled.div`
+  width: 100%;
+  `;
+
+const Title = styled.div`
+  font-size: 32px;
+  text-align: center;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 2.6rem;
+  `;
+const media = {
+  laptop: `@media (max-width: 1024px)`,
+  tablet: `@media (max-width: 768px)`,
+  mobile: `@media (max-width: 480px)`
 };
 
 const DetailsWrapper = styled.div`
@@ -153,33 +186,38 @@ const DetailsWrapper = styled.div`
   background-color: ${(props) => props.theme.bgDiv};
   border-radius: 16px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  ${media.tablet} {
+    margin: 0 8%;
+  }
+
+  ${media.mobile} {
+    margin: 0 4%;
+  }
 `;
 
-const Wrapper = styled.div`
-  width: 100%;
-`;
-
-const ContentWrapper = styled.div `
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    width: 100%;
-`
-const Title = styled.div`
-  font-size: 32px;
-  text-align: center;
-  font-weight: bold;
-  text-transform: uppercase;
-  margin-bottom: 2.6rem;
+const ContentWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  ${media.laptop} {
+    flex-direction: column;
+  }
 `;
 
 const SectionWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 100%;
-    align-items: center;
-`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  align-items: center;
+
+  ${media.tablet} {
+    margin-top: 20px;
+    width: 80%;
+  }
+`;
+
 const ImageWrapper = styled.div`
   display: flex;
   width: 80%;
@@ -188,6 +226,10 @@ const ImageWrapper = styled.div`
   margin-bottom: 16px;
   border-radius: 16px;
   overflow: hidden;
+
+  ${media.tablet} {
+    width: 80%;
+  }
 `;
 
 const Description = styled.p`
@@ -196,12 +238,20 @@ const Description = styled.p`
   color: #dbd9d9;
   width: 80%;
   margin-bottom: 16px;
+
+  ${media.tablet} {
+    width: 100%;
+  }
 `;
 
 const Text = styled.p`
   line-height: 1.25rem;
   font-size: 18px;
   margin-bottom: 8px;
+
+  ${media.tablet} {
+    text-align: center;
+  }
 `;
 
 const DonationSection = styled.div`
@@ -217,7 +267,7 @@ const DonationInput = styled.input`
   padding: 14px;
   flex: 1;
   margin-right: 8px;
-  background-color: ${(props)=>props.theme.bgSubDiv};
+  background-color: ${(props) => props.theme.bgSubDiv};
   color: white;
   outline: none;
   border: none;
@@ -239,19 +289,37 @@ const DonateButton = styled.button`
   }
 `;
 
-const DonationHidescription = styled.div`
+const DonationItem = styled.div`
   margin-top: 16px;
   text-align: left;
-
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
   ul {
     list-style: none;
     padding: 0;
     margin: 0;
   }
-
+  
   li {
     margin-bottom: 4px;
   }
+`;
+
+const Donation = styled.div`
+  width: 100%;
+  background-color: ${(props)=>props.theme.bgSubDiv};
+  padding: 4px 8px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  padding: 2px;
+  `;
+
+const DonationText = styled.div`
+  padding: 2px 4px;
 `;
 
 export default Details;

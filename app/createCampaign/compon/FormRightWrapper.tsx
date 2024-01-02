@@ -58,7 +58,7 @@ const FormRightWrapper: React.FC<FormRightProps> = () => {
 
           const hash = `https://fuchsia-advisory-narwhal-365.mypinata.cloud/ipfs/${res.data.IpfsHash}`;
           Handler.setDescriptionUrl(hash)
-          toast.success(`Successfully uploaded description`);
+          // toast.success(`Successfully uploaded description`);
         } catch (error) {
           toast.warn(`Error uploading description ${error}`);
         }
@@ -89,7 +89,7 @@ const FormRightWrapper: React.FC<FormRightProps> = () => {
 
           const hash = `https://fuchsia-advisory-narwhal-365.mypinata.cloud/ipfs/${res.data.IpfsHash}`;
           Handler.setImageUrl(hash)
-          toast.success(`Successfully uploaded image`);
+          // toast.success(`Successfully uploaded image`);
 
       } catch (error) {
         toast.warn(`Error uploading image ${error}`);

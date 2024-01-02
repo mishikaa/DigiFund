@@ -74,12 +74,8 @@ contract Campaign {
     function donate() public payable {
         require(campaignDetails.requiredAmount > campaignDetails.receivedAmount, "required amount fulfilled");
         
-        address payable owner = campaignDetails.owner;
-
-        owner.transfer(msg.value);
+        campaignDetails.owner.transfer(msg.value);
         campaignDetails.receivedAmount += msg.value;
         emit donated(msg.sender, msg.value, block.timestamp);
-
-        campaignDetails.requiredAmount -= msg.value;
     }
 }

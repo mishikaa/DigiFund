@@ -14,7 +14,7 @@ interface DataProps {
   owner: string;
   timestamp: number;
   amount: string; 
-  address: string;
+  address: any;
 }
 
 const CampaignCard:React.FC<{data: DataProps}> = ({ data }) => {
