@@ -18,8 +18,8 @@ const HeaderRight: React.FC = () => {
   return (
     <HeaderRightWrapper>
       <Wallet />
-      <ThemeToggle onClick={ThemeToggler && ThemeToggler.changeTheme}>
-        {ThemeToggler && ThemeToggler.theme === 'light' ? (
+      <ThemeToggle onClick={typeof ThemeToggler === 'object' && ThemeToggler && ThemeToggler?.changeTheme}>
+        {typeof ThemeToggler === 'object' && ThemeToggler && ThemeToggler?.theme === 'light' ? (
           <DarkModeOutlinedIcon />
         ) : (
           <LightModeOutlinedIcon />
