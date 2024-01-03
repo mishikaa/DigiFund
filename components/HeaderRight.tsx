@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
+import {App} from '@utils/AppContext';
 
 import Wallet from './Wallet';
 
@@ -10,14 +11,15 @@ interface ThemeToggler {
   changeTheme: () => void;
 }
 
-const HeaderRight: React.FC = ({App}:any) => {
+
+const HeaderRight: React.FC = () => {
   const ThemeToggler = useContext(App);
 
   return (
     <HeaderRightWrapper>
       <Wallet />
-      <ThemeToggle onClick={ThemeToggler.changeTheme}>
-        {ThemeToggler.theme === 'light' ? (
+      <ThemeToggle onClick={ThemeToggler && ThemeToggler.changeTheme}>
+        {ThemeToggler && ThemeToggler.theme === 'light' ? (
           <DarkModeOutlinedIcon />
         ) : (
           <LightModeOutlinedIcon />

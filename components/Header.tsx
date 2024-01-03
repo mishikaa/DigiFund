@@ -4,7 +4,7 @@ import HeaderCenter from "@components/HeaderCenter";
 import HeaderRight from "@components/HeaderRight";
 import { useState } from 'react';
 
-const Header = ({App}:any) => {
+const Header = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -15,7 +15,7 @@ const Header = ({App}:any) => {
     <HeaderWrapper className={`z-40 ${isMenuOpen ? 'open' : ''}`}>
       <HeaderLogo />
       <HeaderCenter />
-      <HeaderRight App={App}/>
+      <HeaderRight />
       <MenuButton onClick={toggleMenu}>
         <div className={`bar ${isMenuOpen ? 'bar1-open' : ''}`}></div>
         <div className={`bar ${isMenuOpen ? 'bar2-open' : ''}`}></div>

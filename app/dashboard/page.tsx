@@ -7,6 +7,7 @@ import { ethers } from 'ethers';
 import CampaignFactory from '@artifacts/contracts/campaign.sol/CampaignFactory.json';
 import { useEffect, useState } from 'react';
 import CampaignCard from '@/components/CampaignCard';
+import fetchData from '@/utils/fetchData';
 
 
 // Main Dashboard component
@@ -71,7 +72,7 @@ export default function Dashboard() {
       {/* Filter Section */}
       <FilterWrapper>
         <FilterAltIcon style={{ fontSize: 40 }} />
-        <Category onClick={() => {}}>All</Category>
+        <Category onClick={() => {fetchData}}>All</Category>
         <Category onClick={() => {}}>Health</Category>
         <Category onClick={() => {}}>Education</Category>
         <Category onClick={() => {}}>Animal</Category>

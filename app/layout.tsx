@@ -1,17 +1,14 @@
 'use client';
 
 import '@styles/globals.css'
-import React, { createContext, useState } from 'react';
+import React, { useState } from 'react';
 import Header from '@components/Header';
+import {App} from '@utils/AppContext';
+
 import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
 import themes from '@components/Themes';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-interface AppContextType {
-  theme: 'light' | 'dark';
-  changeTheme: () => void;
-}
 
 
 export default function RootLayout({
@@ -20,7 +17,6 @@ export default function RootLayout({
   children: React.ReactNode
 })
 {
-  const App = createContext<AppContextType | undefined>(undefined);
   const [theme, setTheme] = useState<'light' | 'dark'>('dark');
 
   const changeTheme = () => {
@@ -35,7 +31,7 @@ export default function RootLayout({
           <ThemeProvider theme={themes[theme]}>
             <ToastContainer />
             <LayoutWrapper >
-              <Header App={App}/>
+              <Header />
               {children}
             </LayoutWrapper>
           </ThemeProvider>
