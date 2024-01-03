@@ -32,7 +32,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <ToastContainer />
         <LayoutWrapper >
           <Header />
-          {children}
         </LayoutWrapper>
       </ThemeProvider>
     </App.Provider>

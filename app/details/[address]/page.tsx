@@ -59,7 +59,7 @@ const Details: React.FC = () => {
 
       toast.success('Donation successful!');
     } catch (error) {
-      toast.error(`Unable to make donation. Try again later.${error.message}`)
+      toast.error(`Unable to make donation. Please try again later.`)
     }
   };
 
@@ -109,13 +109,13 @@ const Details: React.FC = () => {
             </SectionWrapper>
             <SectionWrapper>
               <Text>
-                <strong>Required Amount:</strong> {data.requiredAmount - data.receivedAmount} Matic
+                <strong>Required Amount:</strong> {parseFloat(data.requiredAmount) - parseFloat(data.receivedAmount)} Matic
               </Text>
               <Text>
                 <strong>Received Amount:</strong>{data.receivedAmount} Matic
               </Text>
               <Text>
-                <strong>Owner's address:</strong> {data.owner}
+                <strong>Owner&apos;s address:</strong> {data.owner}
               </Text>
               <DonationSection>
                 <DonationInput

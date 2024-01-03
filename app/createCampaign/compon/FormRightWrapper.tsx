@@ -8,7 +8,6 @@ import { TailSpin } from 'react-loader-spinner';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 
-interface FormRightProps {}
 
 interface FormData {
   requiredAmount: number;
@@ -17,15 +16,15 @@ interface FormData {
 }
 
 
-const FormRightWrapper: React.FC<FormRightProps> = () => {
+const FormRightWrapper: React.FC = () => {
+  const [uploadLoading, setUploadLoading] = useState(false);
+  
   const Handler = useContext<FormContextProps | undefined>(FormState);
   // Handling the case when Handler is undefined
   if (!Handler) {
     return null;
   }
   
-  const [uploadLoading, setUploadLoading] = useState(false);
- 
   // Function to upload description and image to IPFS using Pinata API
   const uploadFiles = async (e: FormEvent) => {
     e.preventDefault();
