@@ -11,9 +11,7 @@ import { toast } from 'react-toastify';
 import { ethers } from 'ethers';
 import { TailSpin } from 'react-loader-spinner';
 import Link from 'next/link';
-interface CreateCampaignFormProps {
-  onSubmit: (data: CampaignFormData) => void;
-}
+
 
 interface CampaignFormData {
   campaignTitle: string;
@@ -28,7 +26,7 @@ declare global {
   }
 }
 
-const CreateCampaign: React.FC<CreateCampaignFormProps> = ({ onSubmit }) => {
+const CreateCampaign: React.FC = () => {
   const [formData, setFormData] = useState<CampaignFormData>({
     campaignTitle: '',
     description: '',
