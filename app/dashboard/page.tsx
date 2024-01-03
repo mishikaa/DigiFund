@@ -8,13 +8,14 @@ import CampaignFactory from '@artifacts/contracts/campaign.sol/CampaignFactory.j
 import { useEffect, useState } from 'react';
 import CampaignCard from '@/components/CampaignCard';
 
+
 // Main Dashboard component
 export default function Dashboard() {
   const [campaignsData, setCampaignsData] = useState<Array<{
     title: any;
     image: any;
     owner: any;
-    timeStamp: number;
+    timestamp: number;
     amount: string;
     address: any;
   }>>([]);
@@ -49,7 +50,7 @@ export default function Dashboard() {
             title: eventData.args?.title,
             image: eventData.args?.imgURL,
             owner: eventData.args?.owner,
-            timeStamp: parseInt(eventData.args?.timestamp),
+            timestamp: parseInt(eventData.args?.timestamp),
             amount: ethers.formatEther(eventData.args?.requiredAmount),
             address: eventData.args?.campaignAddress,
           };
