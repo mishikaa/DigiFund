@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
-import {App} from '@utils/AppContext';
+import { App } from '@utils/AppContext';
 
 import Wallet from './Wallet';
 
@@ -11,20 +11,21 @@ interface ThemeToggler {
   changeTheme: () => void;
 }
 
-
 const HeaderRight: React.FC = () => {
   const ThemeToggler = useContext(App);
 
   return (
     <HeaderRightWrapper>
       <Wallet />
-      <ThemeToggle onClick={typeof ThemeToggler === 'object' && ThemeToggler && ThemeToggler?.changeTheme}>
-        {typeof ThemeToggler === 'object' && ThemeToggler && ThemeToggler?.theme === 'light' ? (
-          <DarkModeOutlinedIcon />
-        ) : (
-          <LightModeOutlinedIcon />
-        )}
-      </ThemeToggle>
+      {isThemeToggler(ThemeToggler) && (
+        <ThemeToggle onClick={ThemeToggler.changeTheme}>
+          {ThemeToggler.theme === 'light' ? (
+            <DarkModeOutlinedIcon />
+          ) : (
+            <LightModeOutlinedIcon />
+          )}
+        </ThemeToggle>
+      )}
     </HeaderRightWrapper>
   );
 };
@@ -42,7 +43,7 @@ const HeaderRightWrapper = styled.div`
     flex-direction: column;
     margin-right: 0;
   }
-  `;
+`;
 
 const ThemeToggle = styled.div`
   background-color: ${(props) => props.theme.bgDiv};
@@ -53,7 +54,11 @@ const ThemeToggle = styled.div`
   align-items: center;
   justify-items: center;
   cursor: pointer;
-
 `;
+
+// Function to check if the object is of type ThemeToggler
+const isThemeToggler = (obj: any): obj is ThemeToggler => {
+  return obj && typeof obj === 'object' && 'changeTheme' in obj;
+};
 
 export default HeaderRight;
