@@ -46,18 +46,21 @@ const Details: React.FC = () => {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       
-      const contract = new ethers.Contract(address, Campaign.abi, signer);
-      // Converting donation amount to Ether
-      const donationAmountInEther = ethers.parseEther(donationAmount.toString());
-
-      const transaction = await contract.donate({value: donationAmountInEther});
-      await transaction.wait();
-      console.log(transaction)
-
-      setChange(!change);
-      setDonationAmount(0);
-
-      toast.success('Donation successful!');
+      let contract;
+      if(address) {
+        contract = new ethers.Contract(address, Campaign.abi, signer);
+        // Converting donation amount to Ether
+        const donationAmountInEther = ethers.parseEther(donationAmount.toString());
+  
+        const transaction = await contract.donate({value: donationAmountInEther});
+        await transaction.wait();
+        console.log(transaction)
+  
+        setChange(!change);
+        setDonationAmount(0);
+  
+        toast.success('Donation successful!');
+      }
     } catch (error) {
       toast.error(`Unable to make donation. Please try again later.`)
     }
