@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import styled from 'styled-components'
-import {FormState, FormContextProps} from '../page'
+import { FormState, FormContextProps } from '@utils/formContext';
 
 const FormLeftWrapper = () => {
   const Handler = useContext<FormContextProps | undefined>(FormState);

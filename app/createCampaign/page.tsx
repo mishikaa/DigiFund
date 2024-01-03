@@ -1,15 +1,16 @@
 'use client';
 
-import React, { createContext, useState } from 'react';
+import React, {useState } from 'react';
 import styled from 'styled-components';
 import FormLeftWrapper from './compon/FormLeftWrapper';
 import FormRightWrapper from './compon/FormRightWrapper';
+import CampaignFactory from '@artifacts/contracts/campaign.sol/CampaignFactory.json';
+import { FormState, FormContextProps } from '@utils/formContext';
+
 import { toast } from 'react-toastify';
 import { ethers } from 'ethers';
-import CampaignFactory from '@artifacts/contracts/campaign.sol/CampaignFactory.json';
 import { TailSpin } from 'react-loader-spinner';
 import Link from 'next/link';
-
 interface CreateCampaignFormProps {
   onSubmit: (data: CampaignFormData) => void;
 }
@@ -21,28 +22,11 @@ interface CampaignFormData {
   category: string;
 }
 
-interface FormContextProps {
-  formData: any;
-  setFormData: any;
-  selectedImage: any;
-  FormHandler: any;
-  ImageHandler: any;
-  imageUrl: string | null;
-  setImageUrl: (url: string) => void;
-  descriptionUrl: any;
-  setDescriptionUrl: any;
-  startCampaign: any;
-  uploaded: any;
-  setUploaded: any;
-}
-
 declare global {
   interface Window {
     ethereum?: any; // This will allow 'ethereum' on the window object
   }
 }
-
-const FormState = createContext<FormContextProps | undefined>(undefined);
 
 const CreateCampaign: React.FC<CreateCampaignFormProps> = ({ onSubmit }) => {
   const [formData, setFormData] = useState<CampaignFormData>({
@@ -107,7 +91,7 @@ const CreateCampaign: React.FC<CreateCampaignFormProps> = ({ onSubmit }) => {
           descriptionUrl
         )
 
-        console.log("Campaign data:", campaignData);
+        // console.log("Campaign data:", campaignData);
         await campaignData.wait();
         setAddress(campaignData.to);
       }
@@ -204,5 +188,3 @@ const Button = styled.button`
 `;
 
 export default CreateCampaign;
-export {FormState};
-export type {FormContextProps} ;

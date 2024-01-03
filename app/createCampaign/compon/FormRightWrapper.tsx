@@ -3,18 +3,10 @@
 import React, { useContext, useState, FormEvent } from 'react';
 import styled from 'styled-components';
 import { crowdfundingCategories } from '@constants/categories';
-import { FormState, FormContextProps } from '../page';
+import { FormState, FormContextProps } from '@utils/formContext';
 import { TailSpin } from 'react-loader-spinner';
 import { toast } from 'react-toastify';
 import axios from 'axios';
-
-
-interface FormData {
-  requiredAmount: number;
-  category: string;
-  description: string;
-}
-
 
 const FormRightWrapper: React.FC = () => {
   const [uploadLoading, setUploadLoading] = useState(false);

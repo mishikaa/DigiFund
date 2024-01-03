@@ -47,7 +47,7 @@ export default function Dashboard() {
         
           return {
             title: eventData.args?.title,
-            image: eventData.args?.imgURI,
+            image: eventData.args?.imgURL,
             owner: eventData.args?.owner,
             timeStamp: parseInt(eventData.args?.timestamp),
             amount: ethers.formatEther(eventData.args?.requiredAmount),
