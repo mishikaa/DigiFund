@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 
-import { App } from '../app/layout';
 import Wallet from './Wallet';
 
 interface ThemeToggler {
@@ -11,8 +10,8 @@ interface ThemeToggler {
   changeTheme: () => void;
 }
 
-const HeaderRight: React.FC = () => {
-  const ThemeToggler = useContext(App) as ThemeToggler;
+const HeaderRight: React.FC = ({App}:any) => {
+  const ThemeToggler = useContext(App);
 
   return (
     <HeaderRightWrapper>

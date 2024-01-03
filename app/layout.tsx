@@ -1,6 +1,5 @@
 'use client';
 
-import { Inter } from 'next/font/google'
 import '@styles/globals.css'
 import React, { createContext, useState } from 'react';
 import Header from '@components/Header';
@@ -14,14 +13,14 @@ interface AppContextType {
   changeTheme: () => void;
 }
 
-const App = createContext<AppContextType | undefined>(undefined);
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 })
- {
+{
+  const App = createContext<AppContextType | undefined>(undefined);
   const [theme, setTheme] = useState<'light' | 'dark'>('dark');
 
   const changeTheme = () => {
@@ -36,7 +35,7 @@ export default function RootLayout({
           <ThemeProvider theme={themes[theme]}>
             <ToastContainer />
             <LayoutWrapper >
-              <Header />
+              <Header App={App}/>
               {children}
             </LayoutWrapper>
           </ThemeProvider>
@@ -60,5 +59,3 @@ const LayoutWrapper = styled.div<{ theme: any }>`
   background-image: ${(props) => props.theme.bgImage};
   color: ${(props) => props.theme.color};
 `;
-
-export { App };
