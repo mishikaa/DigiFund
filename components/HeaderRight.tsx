@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 
-import { App } from './Layout';
+import { App } from '../app/layout';
 import Wallet from './Wallet';
 
 interface ThemeToggler {

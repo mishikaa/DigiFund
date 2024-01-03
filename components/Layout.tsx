@@ -1,4 +1,5 @@
 "use client";
+
 import React, { createContext, useState, ReactNode } from 'react';
 import Header from '@components/Header';
 import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
@@ -32,6 +33,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <ToastContainer />
         <LayoutWrapper >
           <Header />
+          {children}
         </LayoutWrapper>
       </ThemeProvider>
     </App.Provider>
